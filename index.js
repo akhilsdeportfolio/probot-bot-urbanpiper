@@ -10,7 +10,7 @@ module.exports = (app) => {
     auth: {
       token: process.env.TOKEN,
     },
-    log: app.log.child({ name: "my-octokit" }),
+    log: app.log.child({ name: "Urbanpiper-bot" }),
   });
   createScheduler(app, {
     name: 'daily',
