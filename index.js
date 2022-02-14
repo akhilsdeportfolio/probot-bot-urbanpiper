@@ -13,7 +13,7 @@ module.exports = (app) => {
   createScheduler(app, {
     name: 'daily',
     delay: !!process.env.DISABLE_DELAY,
-    interval: 1000
+    interval: 60*1000
   });
   app.on('schedule.repository', async (context) => {
     context.octokit.issues.listForRepo({ owner: context.payload.repository.owner.login, repo: context.payload.repository.name }).then((issue) => {
@@ -27,7 +27,7 @@ module.exports = (app) => {
         //let teams = await octokit.orgs.listForAuthenticatedUser({ per_page: 10, page: 1 });
         let team = context.payload.repository.owner.login;
         if (obj.assignee === null && (labels.includes('bug') || labels.includes('support'))) {          
-          if ((dateDiffInDays(new Date(obj.created_at), new Date()) === 1)) {
+          if ((dateDiffInDays(new Date(obj.created_at), new Date()) === 0)||(dateDiffInDays(new Date(obj.created_at), new Date()) === 1)) {
             createComment(context, `@${team}\t please give an update on this issue.`, obj.number);
           }
           else if ((dateDiffInDays(new Date(obj.created_at), new Date()) > 1 && dateDiffInDays(new Date(obj.created_at), new Date()) < 7)) {
@@ -53,10 +53,10 @@ module.exports = (app) => {
     });
 
   });
-  app.on("issues.opened", async (context) => {
-    let teams = await octokit.orgs.listForAuthenticatedUser({ per_page: 10, page: 1 });
-    let team = teams.data[0].login;
-    return welcomeComment(context, ` Thanks for creating the issue, someone from ${team} will be soon assigned to take a look at it.`);
+  app.on("issues.opened", async (context) => {    
+    console.log(context.payload.repository.owner);
+    let team = context.payload.repository.owner.login;
+    return welcomeComment(context, ` Thanks for creating the issue, someone from @${team} will be soon assigned to take a look at it.`);
   });
   app.on("issues.closed", async (context) => {
     console.log("issue has been closed",context.issue);
