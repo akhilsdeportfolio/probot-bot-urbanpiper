@@ -41,7 +41,7 @@ module.exports = (app) => {
                 addStaleLabel(context,obj.number);
           }
         }
-        else
+        else if(obj.assignee !== null && (labels.includes('bug') || labels.includes('support')))
         {
               //issue has assignees
               let message=`@${obj.assignee.login} please resolve this issue as soon as possible`;
