@@ -36,7 +36,7 @@ module.exports = (app) => {
             createComment(context, `@${team} \t There has been no activity on this issue for a while. Please give an update about this issue`, obj.number);
           }
           ///if the issue is not assigned even after 15 days add label stale
-          if(dateDiffInDays(new Date(obj.created_at), new Date())>=2)
+          if(dateDiffInDays(new Date(obj.created_at), new Date())>=15)
           {
                 addStaleLabel(context,obj.number);
           }
