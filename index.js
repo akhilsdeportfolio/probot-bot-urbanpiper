@@ -1,8 +1,5 @@
 const { ProbotOctokit } = require("probot");
 const createScheduler = require('probot-scheduler-pro');
-const dateDiffInDays = require('./src/utils/date');
-
-const addStaleLabel = require("./src/utils/labelHelper");
 const routineTask = require("./src/tasks/routineTasks");
 const onIssueOpened = require("./src/tasks/onIssueOpened");
 const onIssueClosed = require("./src/tasks/onIssueClosed");
