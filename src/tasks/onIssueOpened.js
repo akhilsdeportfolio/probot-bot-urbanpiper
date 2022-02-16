@@ -1,7 +1,7 @@
 const { ProbotOctokit, Probot } = require("probot");
 const { welcomeComment, addResolutionDateComment } = require("../utils/commentsHelper");
 const axios = require('axios');
-const metaData= require('probot-metadata');
+const metaData = require('probot-metadata');
 
 
 let onIssueOpened = async (context) => {

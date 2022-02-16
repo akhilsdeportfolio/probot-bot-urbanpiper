@@ -13,21 +13,20 @@ function getFutureDate(currentDate, futureDays) {
 function getFutureDateUF(currentDate, futureDays) {
           let op = "";
           let newDate = moment(currentDate, "DD-MM-YYYY").add('days', futureDays);
-          
+
           return newDate;
 }
 
 
-function getFormattedDate(date)
-{         
-          console.log("Recieved for formmatting",date);
-          let op="";
-          let newDate=moment(date, "DD-MM-YYYY");          
+function getFormattedDate(date) {
+          console.log("Recieved for formmatting", date);
+          let op = "";
+          let newDate = moment(date, "DD-MM-YYYY");
           op += newDate.format('DD');
           op += "/";
           op += newDate.format('MM');
           op += "/";
-          op += newDate.format('YYYY');  
+          op += newDate.format('YYYY');
           return op;
 
 }
@@ -44,4 +43,4 @@ function isTimeOut(createdDate, timeOutDays) {
 
 
 
-module.exports = { getFutureDate, isTimeOut,getFormattedDate,getFutureDateUF};        
+module.exports = { getFutureDate, isTimeOut, getFormattedDate, getFutureDateUF };        
