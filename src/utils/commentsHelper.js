@@ -1,6 +1,7 @@
-const { getFutureDate, getFormattedDate } = require("./momentHelper");
+const { getFutureDate, getFormattedDate, getFutureDateUF } = require("./momentHelper");
 
 const moment=require('moment');
+const metadata = require("probot-metadata");
 
 async function createComment(context, message, number) {
           let owner = context.payload.repository.owner.login;
@@ -24,14 +25,15 @@ async function addResolutionDateComment(context)
 {         
 
 
-          console.log("Payload",moment(context.payload.issue.created_at,"DD-MM-YYYY").toDate());
-
-          const resolutionComment = context.issue({
-                    body:"Resolution Date - "+getFutureDate(getFormattedDate(moment.utc('2022-02-16T09:06:16Z').format("DD-MM-YYYY")),3)
-          });
-          await context.octokit.issues.createComment(resolutionComment);
           
 
+          const resolutionComment = context.issue({
+                    body:"Resolution Date - "+getFutureDate(getFormattedDate(moment.utc(context.payload.issue.created_at).format("DD-MM-YYYY")),3)
+          });
+
+          await context.octokit.issues.createComment(resolutionComment);
+
+          await metadata(context).set({"resolutionDate":getFutureDateUF(moment.utc(context.payload.issue.created_at),3)});
 
 }
 module.exports = { createComment, welcomeComment,addResolutionDateComment};         
