@@ -4,9 +4,9 @@ function getFutureDate(currentDate, futureDays) {
           let op = "";
           let newDate = moment(currentDate, "DD-MM-YYYY").add('days', futureDays);
           op += newDate.format('DD');
-          op += "-";
+          op += "/";
           op += newDate.format('MM');
-          op += "-";
+          op += "/";
           op += newDate.format('YYYY');
           return op;
 }
