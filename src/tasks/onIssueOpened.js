@@ -8,27 +8,25 @@ let onIssueOpened = async (context) => {
           let teams_url = context.payload.repository.teams_url;
           //get labels and check for bug,support or service request or none and act accordingly.
           let labels = context.payload.issue.labels;
+          //mapping all label objects to their names for easy queerying;
+          labels = labels.map((label) => label.name);
+          //console.log("labels", labels)
 
-          labels=labels.map((label)=>label.name);
-          console.log("labels",labels)
-          if(labels.length > 0)
-          {         
+          //if labels array lenght is more than 0
+          if (labels.length > 0) {
 
-                    if(labels.includes('bug')|| labels.includes('support'))
-                    {         
-                    
+                    if (labels.includes('bug') || labels.includes('support')) {
+
                               //comment the resolution date;
-                             return addResolutionDateComment(context);
+                              return addResolutionDateComment(context);
 
 
-                    }else if(labels.includes('service-request')||labels.includes('feature'))
-                    {
+                    } else if (labels.includes('service-request') || labels.includes('feature')) {
 
 
 
                     }
-                    else
-                    {
+                    else {
                               console.log("Cant find the labels");
                     }
 
@@ -36,9 +34,8 @@ let onIssueOpened = async (context) => {
 
 
           }
-          else
-          {         
-                    //no labels for the issue
+          else {
+                    //no labels for the issue so alert the slack team of that issues.
 
 
 
