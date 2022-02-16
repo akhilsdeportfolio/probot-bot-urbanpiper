@@ -26,7 +26,7 @@ module.exports = (app) => {
   createScheduler(app, {
     name: 'daily',
     delay: !!process.env.DISABLE_DELAY,
-    interval: 1000
+    interval: 10*1000
   });
   app.on('schedule.repository', routineTask);
   app.on("issues.opened", onIssueOpened);
