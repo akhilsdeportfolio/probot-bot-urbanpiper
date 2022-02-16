@@ -1,5 +1,8 @@
 let onIssueClosed = async (context) => {
-          console.log("issue has been closed", context.issue);
+          //this is triggered when ever issue is closed
+
+
+
 
 }
 

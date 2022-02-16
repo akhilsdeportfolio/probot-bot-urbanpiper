@@ -3,6 +3,8 @@ const addStaleLabel = require('../utils/labelHelper');
 const { createComment, welcomeComment } = require('../utils/commentsHelper');
 
 let routineTask = async (context) => {
+
+          //this is a routine task that will be triggered according to the configured scheduler
           context.octokit.issues.listForRepo({ owner: context.payload.repository.owner.login, repo: context.payload.repository.name }).then((issue) => {
                     let data = issue.data;
                     data.forEach(async (obj) => {
@@ -10,8 +12,7 @@ let routineTask = async (context) => {
                               labels = labels.map((label) => {
                                         return label.name;
                               });
-                              //getting teams and picking the first team as default.
-                              //let teams = await octokit.orgs.listForAuthenticatedUser({ per_page: 10, page: 1 });
+                              //team is the owner of the repo
                               let team = context.payload.repository.owner.login;
                               if (obj.assignee === null && (labels.includes('bug') || labels.includes('support'))) {
                                         if ((dateDiffInDays(new Date(obj.created_at), new Date()) === 0) || (dateDiffInDays(new Date(obj.created_at), new Date()) === 1)) {
@@ -38,7 +39,4 @@ let routineTask = async (context) => {
           });
 
 }
-
-
-
 module.exports = routineTask;
