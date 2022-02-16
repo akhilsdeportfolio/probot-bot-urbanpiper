@@ -1,5 +1,5 @@
 const dateDiffInDays = require('../utils/date');
-const addStaleLabel = require('../utils/labelHelper');
+const {addStaleLabel} = require('../utils/labelHelper');
 const { createComment, welcomeComment } = require('../utils/commentsHelper');
 
 let routineTask = async (context) => {
