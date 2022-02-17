@@ -27,7 +27,7 @@ docker run -e APP_ID=<app-id> -e PRIVATE_KEY=<pem-value> issue-tracker
 
 ```sh
 # 1. Visit the github app page
-Github App Link - issue-bot [https://github.com/apps/issues-auto-bot]
+[https://github.com/apps/issues-auto-bot]
 
 # 2. Install the app by clicking on the install option 
 Click on Install

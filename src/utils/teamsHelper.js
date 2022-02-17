@@ -1,7 +1,8 @@
 const teams = {
           "issues-prime": ['azaan', 'vaibhav', 'akhilsdeportfolio', 'ibrahim', 'parth'],
           "issues-atlas": [],
-          "issues-codex": []
+          "issues-codex": [],
+          "ola-clone": ['akhilsdeportfolio']
 }
 function isMemeber(team, memeberId) {
 
@@ -15,4 +16,4 @@ function isMemeber(team, memeberId) {
           }
 }
 
-module.exports = { isMemeber };
+module.exports = { isMemeber, teams };

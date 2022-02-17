@@ -4,15 +4,12 @@ const { createComment, welcomeComment } = require('../utils/commentsHelper');
 const metadata = require('probot-metadata');
 const { Octokit } = require('octokit');
 const { default: axios } = require('axios');
-const { isBug, isSupport, isServiceRequest, isNoLabels, isResolved, isAcknowledged } = require('../utils/issueHelper');
+const { isBug, isSupport, isServiceRequest, isNoLabels, isResolved, isAcknowledged, hasResolutionComment } = require('../utils/issueHelper');
 require('dotenv').config()
-
-
 
 let octokit = new Octokit({
 
 });
-
 
 let routineTask = async (context) => {
           //this is a routine task that will be triggered according to the configured scheduler
@@ -21,7 +18,7 @@ let routineTask = async (context) => {
                     let issues = await context.octokit.issues.listForRepo({ owner: context.payload.repository.owner.login, repo: context.payload.repository.name });
                     //incase we have some issues          
                     if (issues.data.length > 0) {
-                              issues.data.forEach(issue => {
+                              issues.data.forEach(async issue => {
                                         //we have some issues for repo now check for labels
                                         //issues might have lables (bug,support,service-request)
                                         let labels = issue.labels;
@@ -37,21 +34,46 @@ let routineTask = async (context) => {
                                                             if (diffInDays === 0) {
                                                                       //issue is created today only.
 
+                                                                      
 
                                                             }
                                                             else if (diffInDays >= 1 && diffInDays <= 3) {
                                                                       //console.log("24 - 48","check if acknowledged")
 
-                                                                      if (isAcknowledged(issue)) {
 
+
+                                                                      if (isAcknowledged(issue, context)) {
+                                                                                console.log("ISSUE HAS BEEN ACKNOWLEDGED ON TIME");
                                                                       }
                                                                       else {
                                                                                 addLabel(context, issue.number, ['sla-v-1']);
 
                                                                       }
 
+
+
+                                                                      //check if comment is there or not 
+
+
                                                             }
                                                             else if (diffInDays > 3) {
+                                                                      //check for resolution date in the comments
+                                                                      
+                                                                      let comm = await hasResolutionComment(issue, context);
+
+                                                                      if(comm)
+                                                                      {
+                                                                                //has resolution date comment check if the issue is resolved as per mentioned date //if resolved donothing else add sla-v-3
+
+
+                                                                      }
+                                                                      else
+                                                                      {
+                                                                                //doesnt have resolution date add 
+                                                                                addLabel(context,issue.number,['sla-v-2']);
+
+                                                                      }
+
                                                                       //console.log("72","check if resolved")
                                                                       if (isResolved(issue)) {
 
@@ -59,6 +81,9 @@ let routineTask = async (context) => {
                                                                       else {
                                                                                 addLabel(context, issue.number, ['sla-v-3'])
                                                                       }
+
+
+
                                                             }
 
 
