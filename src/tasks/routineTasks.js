@@ -1,15 +1,11 @@
-const { dateDiffInDays, dateDiffInHours } = require('../utils/datesHelper');
-const { addStaleLabel, addLabel } = require('../utils/labelHelper');
+const { dateDiffInDays } = require('../utils/datesHelper');
+const { addLabel } = require('../utils/labelHelper');
 const { createComment, welcomeComment } = require('../utils/commentsHelper');
-const metadata = require('probot-metadata');
 const { Octokit } = require('octokit');
 const { default: axios } = require('axios');
 const { isBug, isSupport, isServiceRequest, isNoLabels, isResolved, isAcknowledged, hasResolutionComment } = require('../utils/issueHelper');
 require('dotenv').config()
 
-let octokit = new Octokit({
-
-});
 
 let routineTask = async (context) => {
           //this is a routine task that will be triggered according to the configured scheduler
@@ -120,6 +116,8 @@ let routineTask = async (context) => {
                                                   }
                                                   if (isNoLabels(mLabels)) {
                                                             console.log("No labels", issue);
+
+                                                            //alert in the slack channel
                                                   }
 
 
