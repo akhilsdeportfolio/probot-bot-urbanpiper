@@ -14,4 +14,4 @@ function useRegex(input) {
           return regex.test(input);
 }
 
-console.log(useRegex(""));
+console.log(useRegex('Resolution Date - 17/02/2022'));

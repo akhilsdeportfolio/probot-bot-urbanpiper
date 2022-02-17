@@ -76,33 +76,44 @@ function isResolved(issue) {
 }
 
 
-async function hasResolutionComment(issue, context) {
-          //check if issue has a resolution comment
-          let comments = await context.octokit.issues.listComments({
+async function hasResolutionComment(issue,context) {
+          let notFoundInComment=false;
+          let foundInComments= false;
+          let date ="";
+          //check if issue has a resolution comment          
+          let comments=await context.octokit.issues.listComments({
                     owner: context.payload.repository.owner.login, repo: context.payload.repository.name,
                     issue_number: issue.number,
           });
 
-          if (comments.data.length > 0) {
-                    comments.data.forEach((comment) => {
-                              console.log(comment);
-                              if (isValidResolutionDateComment(comment.body))
-                                        return true;
-                    });
-
-                    return false;
+          if(comments.data.length > 0)
+          {
+                  comments.data.forEach((comment)=>{
+                              console.log("Helper",isValidResolutionDateComment(comment.body))
+                              if(isValidResolutionDateComment(comment.body)==true)
+                                        {
+                                                  foundInComments=true;
+                                                  date=comment.body;
+                                        }
+                              
+                    })                    
+                    notFoundInComment=true;
 
           }
+          
 
-          if (comments.data.length === 0)
-                    return false;
+          
+          if(foundInComments===true)          
+                    return {status:true,date};                    
+          else 
+                    return {status:false,date:null};               
 }
 
 function isValidResolutionDateComment(input) {
-          let regex = /^Resolution\sDate\s-\s([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
+          let regex=/^Resolution\sDate\s-\s([0-2][0-9]|(3)[0-1])(\/)(((0)[0-9])|((1)[0-2]))(\/)\d{4}$/i;
           return regex.test(input);
 }
 
 
 
-module.exports = { isBug, isSupport, isServiceRequest, isNoLabels, isAcknowledged, isResolved, hasResolutionComment }
+module.exports = { isBug, isSupport, isServiceRequest, isNoLabels, isAcknowledged, isResolved ,hasResolutionComment}

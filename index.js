@@ -6,16 +6,6 @@ const onIssueClosed = require("./src/tasks/onIssueClosed");
 const { isMemeber } = require("./src/utils/teamsHelper");
 const { getFutureDate, isTimeOut } = require("./src/utils/momentHelper");
 
-
-
-
-
-let date = new Date();
-
-console.log("FUTURE DATE ", getFutureDate(date, 3));
-console.log("IS TIME OUT ", isTimeOut(date, 1));
-
-
 module.exports = (app) => {
   const octokit = new ProbotOctokit({
     auth: {
