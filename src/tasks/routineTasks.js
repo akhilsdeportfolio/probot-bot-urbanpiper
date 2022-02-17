@@ -5,15 +5,15 @@ const { Octokit } = require('octokit');
 const { default: axios } = require('axios');
 const { isBug, isSupport, isServiceRequest, isNoLabels, isResolved, isAcknowledged, hasResolutionComment } = require('../utils/issueHelper');
 require('dotenv').config();
-const moment= require('moment');
+const moment = require('moment');
 
 
 let routineTask = async (context) => {
           //this is a routine task that will be triggered according to the configured scheduler
-          //get all issues for a repo and dosomething accordingly          
+          //get all issues for a repo and dosomething accordingly
           try {
                     let issues = await context.octokit.issues.listForRepo({ owner: context.payload.repository.owner.login, repo: context.payload.repository.name });
-                    //incase we have some issues          
+                    //incase we have some issues
                     if (issues.data.length > 0) {
                               issues.data.forEach(async issue => {
                                         //we have some issues for repo now check for labels
@@ -23,26 +23,23 @@ let routineTask = async (context) => {
                                         if (mLabels.length > 0) {
                                                   if (isBug(mLabels) || isSupport(mLabels)) {
                                                             //console.log("BUG",issue.created_at);
-                                                            //get the created date and check the time passsed 
+                                                            //get the created date and check the time passsed
                                                             let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
 
                                                             console.log("Diff", diffInDays);
 
                                                             if (diffInDays === 0) {
                                                                       //issue is created today only.
-
                                                                       let comm = await hasResolutionComment(issue, context);
                                                                       //console.log(comm);
-                                                                      if(comm.status)
-                                                                      {
+                                                                      if (comm.status) {
                                                                                 //has resolution date comment check if the issue is resolved as per mentioned date //if resolved donothing else add sla-v-3
-                                                                                console.log("Resolution Date",comm.date.split("-")[1].trim());;                                      
+                                                                                console.log("Resolution Date", comm.date.split("-")[1].trim());;
                                                                                 //find the diff between dates and if > 0 add sla-v-3
                                                                       }
-                                                                      else
-                                                                      {
-                                                                                //doesnt have resolution date add 
-                                                                                addLabel(context,issue.number,['sla-v-2']);
+                                                                      else {
+                                                                                //doesnt have resolution date add
+                                                                                addLabel(context, issue.number, ['sla-v-2']);
 
                                                                       }
 
@@ -63,35 +60,12 @@ let routineTask = async (context) => {
 
 
 
-                                                                      //check if comment is there or not 
+                                                                      //check if comment is there or not
 
 
                                                             }
                                                             else if (diffInDays > 3) {
-                                                                      //check for resolution date in the comments
-                                                                      
-                                                                      let comm = await hasResolutionComment(issue, context);
-                                                                      console.log(comm);
-                                                                      if(comm)
-                                                                      {
-                                                                                //has resolution date comment check if the issue is resolved as per mentioned date //if resolved donothing else add sla-v-3
-
-                                                                                console.log(moment().format("DD/MM/YYYY"));
-
-
-                                                                      }
-                                                                      else
-                                                                      {
-                                                                                //doesnt have resolution date add 
-                                                                                addLabel(context,issue.number,['sla-v-2']);
-
-                                                                      }
-
-
-
-
-
-                                                                      //console.log("72","check if resolved")
+                                                                      //check for resolution date in the comments                                                                      
                                                                       if (isResolved(issue)) {
 
                                                                       }
@@ -123,7 +97,7 @@ let routineTask = async (context) => {
                                                             else if (diffInDays > 3) {
                                                                       console.log(isResolved(issue));
                                                                       if (isResolved(issue)) {
-
+																								
                                                                       }
                                                                       else {
                                                                                 addLabel(context, issue.number, ['sla-v-2'])

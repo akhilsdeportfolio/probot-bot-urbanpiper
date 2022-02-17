@@ -15,3 +15,12 @@ function useRegex(input) {
 }
 
 console.log(useRegex('Resolution Date - 17/02/2022'));
+
+let arr = [1,34,3,34,434,34,34,34];
+
+let resp=arr.forEach((el)=>{
+          if(el==434)
+          return true
+})
+
+console.log(resp);
