@@ -20,7 +20,7 @@ let onIssueOpened = async (context) => {
                     if (labels.includes('bug') || labels.includes('support')) {
 
                               //comment the resolution date;
-                              return addResolutionDateComment(context);
+                              //return addResolutionDateComment(context);
 
 
                     } else if (labels.includes('service-request') || labels.includes('feature')) {

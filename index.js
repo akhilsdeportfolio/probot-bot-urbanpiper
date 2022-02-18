@@ -18,6 +18,8 @@ module.exports = (app) => {
     delay: !!process.env.DISABLE_DELAY,
     interval: 10*1000
   });
+
+  //octokit.issues.listForRepo({})
   app.on('schedule.repository', routineTask);
   app.on("issues.opened", onIssueOpened);
   app.on("issues.closed", onIssueClosed);

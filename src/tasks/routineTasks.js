@@ -1,4 +1,4 @@
-const { dateDiffInDays } = require('../utils/datesHelper');
+const { dateDiffInDays, dateDiffInHours } = require('../utils/datesHelper');
 const { addLabel } = require('../utils/labelHelper');
 const { createComment, welcomeComment } = require('../utils/commentsHelper');
 const { Octokit } = require('octokit');
@@ -6,13 +6,20 @@ const { default: axios } = require('axios');
 const { isBug, isSupport, isServiceRequest, isNoLabels, isResolved, isAcknowledged, hasResolutionComment } = require('../utils/issueHelper');
 require('dotenv').config();
 const moment = require('moment');
+const { postMessage } = require('../utils/slackHelper');
 
 
 let routineTask = async (context) => {
           //this is a routine task that will be triggered according to the configured scheduler
           //get all issues for a repo and dosomething accordingly
+
+
+          // get only open issues			 
           try {
-                    let issues = await context.octokit.issues.listForRepo({ owner: context.payload.repository.owner.login, repo: context.payload.repository.name });
+                    let issues = await context.octokit.issues.listForRepo({
+                              owner: context.payload.repository.owner.login, repo: context.payload.repository.name, state: "open", per_page: 100
+                    });
+                    console.log("TOTAL ISSUES FOUND FOR " + context.payload.repository.name, issues);
                     //incase we have some issues
                     if (issues.data.length > 0) {
                               issues.data.forEach(async issue => {
@@ -25,6 +32,9 @@ let routineTask = async (context) => {
                                                             //console.log("BUG",issue.created_at);
                                                             //get the created date and check the time passsed
                                                             let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
+
+                                                            let diffInHours = dateDiffInHours(new Date(issue.created_at));
+                                                            console.log(+diffInHours.split(":")[0].split("").slice(1).join(""));
 
                                                             console.log("Diff", diffInDays);
 
@@ -52,6 +62,8 @@ let routineTask = async (context) => {
 
                                                                       if (isAcknowledged(issue, context)) {
                                                                                 console.log("ISSUE HAS BEEN ACKNOWLEDGED ON TIME");
+
+
                                                                       }
                                                                       else {
                                                                                 addLabel(context, issue.number, ['sla-v-1']);
@@ -71,6 +83,8 @@ let routineTask = async (context) => {
                                                                       }
                                                                       else {
                                                                                 addLabel(context, issue.number, ['sla-v-3'])
+
+                                                                                postMessage("Please fix it on prioroty @issues-prime");
                                                                       }
 
 
@@ -97,7 +111,7 @@ let routineTask = async (context) => {
                                                             else if (diffInDays > 3) {
                                                                       console.log(isResolved(issue));
                                                                       if (isResolved(issue)) {
-																								
+
                                                                       }
                                                                       else {
                                                                                 addLabel(context, issue.number, ['sla-v-2'])
