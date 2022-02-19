@@ -8,7 +8,7 @@
 # Install dependencies
 npm install
 
-# Run the bot
+# Run the bot3
 npm start
 ```
 
@@ -27,7 +27,7 @@ docker run -e APP_ID=<app-id> -e PRIVATE_KEY=<pem-value> issue-tracker
 
 ```sh
 # 1. Visit the github app page
-[https://github.com/apps/issues-auto-bot]
+[UrbanPiper Bot](https://github.com/apps/issues-auto-bot)
 
 # 2. Install the app by clicking on the install option 
 Click on Install
@@ -38,6 +38,7 @@ Select all repos or select only the ones you want the bot to manage the actions.
 Sit back and relax . You have successfully installed the app.
 ```
 
+## Creating Slack Bot for easy slack nootifications
 
 ## Contributing
 

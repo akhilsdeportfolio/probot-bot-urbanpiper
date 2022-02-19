@@ -4,6 +4,7 @@ const teams = {
           "issues-codex": [],
           "ola-clone": ['akhilsdeportfolio']
 }
+
 function isMemeber(team, memeberId) {
 
           if (teams[team] !== undefined) {

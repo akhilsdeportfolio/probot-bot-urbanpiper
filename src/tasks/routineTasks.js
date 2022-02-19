@@ -8,18 +8,15 @@ require('dotenv').config();
 const moment = require('moment');
 const { postMessage } = require('../utils/slackHelper');
 
-
 let routineTask = async (context) => {
           //this is a routine task that will be triggered according to the configured scheduler
           //get all issues for a repo and dosomething accordingly
-
-
           // get only open issues			 
           try {
                     let issues = await context.octokit.issues.listForRepo({
                               owner: context.payload.repository.owner.login, repo: context.payload.repository.name, state: "open", per_page: 100
                     });
-                    console.log("TOTAL ISSUES FOUND FOR " + context.payload.repository.name, issues);
+                    console.log("TOTAL ISSUES FOUND FOR " + context.payload.repository.name, issues.data.length);
                     //incase we have some issues
                     if (issues.data.length > 0) {
                               issues.data.forEach(async issue => {
@@ -32,19 +29,20 @@ let routineTask = async (context) => {
                                                             //console.log("BUG",issue.created_at);
                                                             //get the created date and check the time passsed
                                                             let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
-
                                                             let diffInHours = dateDiffInHours(new Date(issue.created_at));
-                                                            console.log(+diffInHours.split(":")[0].split("").slice(1).join(""));
-
+                                                            diffInHours = +diffInHours.split(":")[0].split("").slice(1).join("");
+                                                            console.log("time after creating the issue ", diffInHours);
                                                             console.log("Diff", diffInDays);
-
                                                             if (diffInDays === 0) {
                                                                       //issue is created today only.
                                                                       let comm = await hasResolutionComment(issue, context);
                                                                       //console.log(comm);
                                                                       if (comm.status) {
                                                                                 //has resolution date comment check if the issue is resolved as per mentioned date //if resolved donothing else add sla-v-3
+                                                                                const resolutionDate = comm.date.split("-")[1].trim();
+                                                                                let temp = resolutionDate.split("/");
                                                                                 console.log("Resolution Date", comm.date.split("-")[1].trim());;
+                                                                                console.log("Diff in hours res", dateDiffInHours(new Date(+temp[2], +temp[1] - 1, +temp[0])));
                                                                                 //find the diff between dates and if > 0 add sla-v-3
                                                                       }
                                                                       else {
@@ -52,47 +50,23 @@ let routineTask = async (context) => {
                                                                                 addLabel(context, issue.number, ['sla-v-2']);
 
                                                                       }
-
-
                                                             }
-                                                            else if (diffInDays >= 1 && diffInDays <= 3) {
+                                                            else if (diffInHours >= 24 && diffInHours <= 72) {
                                                                       //console.log("24 - 48","check if acknowledged")
-
-
-
-                                                                      if (isAcknowledged(issue, context)) {
-                                                                                console.log("ISSUE HAS BEEN ACKNOWLEDGED ON TIME");
-
-
-                                                                      }
-                                                                      else {
+                                                                      //console.log(await isAcknowledged(issue,context));
+                                                                      if (! await isAcknowledged(issue, context)) {
+                                                                                //console.log("Issue is not acknowledged");
                                                                                 addLabel(context, issue.number, ['sla-v-1']);
-
                                                                       }
-
-
-
                                                                       //check if comment is there or not
-
-
                                                             }
                                                             else if (diffInDays > 3) {
                                                                       //check for resolution date in the comments                                                                      
-                                                                      if (isResolved(issue)) {
-
-                                                                      }
-                                                                      else {
-                                                                                addLabel(context, issue.number, ['sla-v-3'])
-
+                                                                      if (!isResolved(issue)) {
+                                                                                addLabel(context, issue.number, ['sla-v-3']);
                                                                                 postMessage("Please fix it on prioroty @issues-prime");
                                                                       }
-
-
-
                                                             }
-
-
-
                                                   }
                                                   else if (isServiceRequest(mLabels)) {
 
@@ -101,42 +75,26 @@ let routineTask = async (context) => {
 
                                                             if (diffInDays > 0 && diffInDays < 2) {
                                                                       // it been a day
-                                                                      if (isAcknowledged(issue, context)) {
-
-                                                                      }
-                                                                      else {
+                                                                      if (!isAcknowledged(issue, context)) {
                                                                                 addLabel(context, issue.number, ['sla-v-1']);
                                                                       }
+
                                                             }
                                                             else if (diffInDays > 3) {
                                                                       console.log(isResolved(issue));
-                                                                      if (isResolved(issue)) {
-
-                                                                      }
-                                                                      else {
+                                                                      if (!isResolved(issue)) {
                                                                                 addLabel(context, issue.number, ['sla-v-2'])
                                                                       }
-
-
                                                             }
-
-
-
                                                   }
-                                                  if (isNoLabels(mLabels)) {
-                                                            console.log("No labels", issue);
-
-                                                            //alert in the slack channel
-                                                  }
-
-
                                         }
                                         else {
                                                   //this is an unlablled issue act accordingly by alerting on slack.
+                                                  //post a slack message by tagging the respective team;
+
+
                                         }
-
                               });
-
                     }
                     else {
                               //we dont have any issues for the repo...do nothing
@@ -145,7 +103,5 @@ let routineTask = async (context) => {
           catch (err) {
                     console.log(err);
           };
-
-
 }
 module.exports = routineTask;

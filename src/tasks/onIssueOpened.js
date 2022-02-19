@@ -3,7 +3,6 @@ const { welcomeComment, addResolutionDateComment } = require("../utils/commentsH
 const axios = require('axios');
 const metaData = require('probot-metadata');
 
-
 let onIssueOpened = async (context) => {
           //this is triggered when ever issue is created;
           let team = context.payload.repository.owner.login;
@@ -13,34 +12,19 @@ let onIssueOpened = async (context) => {
           //mapping all label objects to their names for easy queerying;
           labels = labels.map((label) => label.name);
           //console.log("labels", labels)
-
           //if labels array lenght is more than 0
           if (labels.length > 0) {
-
                     if (labels.includes('bug') || labels.includes('support')) {
-
                               //comment the resolution date;
                               //return addResolutionDateComment(context);
-
-
                     } else if (labels.includes('service-request') || labels.includes('feature')) {
-
-
-
                     }
                     else {
                               console.log("Cant find the labels");
                     }
-
-
-
-
           }
           else {
                     //no labels for the issue so alert the slack team of that issues.
-
-
-
           }
 
           /* console.log(context);
