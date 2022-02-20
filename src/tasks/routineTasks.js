@@ -16,7 +16,7 @@ let routineTask = async (context) => {
                     let issues = await context.octokit.issues.listForRepo({
                               owner: context.payload.repository.owner.login, repo: context.payload.repository.name, state: "open", per_page: 100
                     });
-                    console.log("TOTAL ISSUES FOUND FOR " + context.payload.repository.name, issues.data.length);
+                 //   console.log("TOTAL ISSUES FOUND FOR " + context.payload.repository.name, issues.data.length);
                     //incase we have some issues
                     if (issues.data.length > 0) {
                               issues.data.forEach(async issue => {
@@ -25,14 +25,16 @@ let routineTask = async (context) => {
                                         let labels = issue.labels;
                                         let mLabels = labels.map((label) => label.name);
                                         if (mLabels.length > 0) {
+
+                                                  //console.log("Support", isSupport(mLabels));
                                                   if (isBug(mLabels) || isSupport(mLabels)) {
                                                             //console.log("BUG",issue.created_at);
                                                             //get the created date and check the time passsed
                                                             let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
                                                             let diffInHours = dateDiffInHours(new Date(issue.created_at));
                                                             diffInHours = +diffInHours.split(":")[0].split("").slice(1).join("");
-                                                            console.log("time after creating the issue ", diffInHours);
-                                                            console.log("Diff", diffInDays);
+                                                             //console.log("time after creating the issue ", diffInHours);
+                                                          //  console.log("Diff", diffInDays);
                                                             if (diffInDays === 0) {
                                                                       //issue is created today only.
                                                                       let comm = await hasResolutionComment(issue, context);
@@ -44,6 +46,11 @@ let routineTask = async (context) => {
                                                                                 console.log("Resolution Date", comm.date.split("-")[1].trim());;
                                                                                 console.log("Diff in hours res", dateDiffInHours(new Date(+temp[2], +temp[1] - 1, +temp[0])));
                                                                                 //find the diff between dates and if > 0 add sla-v-3
+                                                                                let diff=dateDiffInHours(new Date(+temp[2], +temp[1] - 1, +temp[0]))
+                                                                                if(diff < 0)
+                                                                                {
+                                                                                          addLabel(context,issue.number,['sla-v-2']);
+                                                                                }
                                                                       }
                                                                       else {
                                                                                 //doesnt have resolution date add
@@ -55,7 +62,7 @@ let routineTask = async (context) => {
                                                                       //console.log("24 - 48","check if acknowledged")
                                                                       //console.log(await isAcknowledged(issue,context));
                                                                       if (! await isAcknowledged(issue, context)) {
-                                                                                //console.log("Issue is not acknowledged");
+                                                                                //console.log("Issue is not acknowledged",issue.number);
                                                                                 addLabel(context, issue.number, ['sla-v-1']);
                                                                       }
                                                                       //check if comment is there or not
@@ -70,7 +77,7 @@ let routineTask = async (context) => {
                                                   }
                                                   else if (isServiceRequest(mLabels)) {
 
-                                                            console.log("Service req");
+                                                         //   console.log("Service req");
                                                             let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
 
                                                             if (diffInDays > 0 && diffInDays < 2) {
@@ -95,9 +102,6 @@ let routineTask = async (context) => {
 
                                         }
                               });
-                    }
-                    else {
-                              //we dont have any issues for the repo...do nothing
                     }
           }
           catch (err) {

@@ -19,7 +19,7 @@ function getFutureDateUF(currentDate, futureDays) {
 
 
 function getFormattedDate(date) {
-          console.log("Recieved for formmatting", date);
+          //console.log("Recieved for formmatting", date);
           let op = "";
           let newDate = moment(date, "DD-MM-YYYY");
           op += newDate.format('DD');
@@ -36,7 +36,7 @@ function isTimeOut(createdDate, timeOutDays) {
           let resolveDate = getFutureDate(createdDate, timeOutDays);
           let today = getFutureDate(new Date(), 0);
 
-          console.log("Resolve Date , today", resolveDate, "\t", today);
+//          console.log("Resolve Date , today", resolveDate, "\t", today);
           return resolveDate === today ? true : false;
 }
 

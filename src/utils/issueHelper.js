@@ -88,7 +88,7 @@ async function hasResolutionComment(issue, context) {
 
         if (comments.data.length > 0) {
                 comments.data.forEach((comment) => {
-                        console.log("Helper", isValidResolutionDateComment(comment.body))
+                        //console.log("Helper", isValidResolutionDateComment(comment.body))
                         if (isValidResolutionDateComment(comment.body) == true) {
                                 foundInComments = true;
                                 date = comment.body;
