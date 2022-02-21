@@ -88,8 +88,8 @@ let routineTask = async (context) => {
             else {
                //this is an unlablled issue act accordingly by alerting on slack.
                //post a slack message by tagging the respective team;
-               await postMessage(`Please add label to issue #${issue.number} `);
-
+               //console.log(context);
+               await postMessage(`Please add label to issue #${issue.number} of Repo:[${context.payload.repository.name}].`);
 
             }
          });
