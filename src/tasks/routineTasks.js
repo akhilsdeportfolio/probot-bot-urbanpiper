@@ -36,17 +36,13 @@ let routineTask = async (context) => {
                   diffInHours = +diffInHours.split(":")[0].split("").slice(1).join("");
                   //console.log("time after creating the issue ", diffInHours);
                   //  console.log("Diff", diffInDays);
-                  if (diffInDays === 0) {
-                     //issue is created today only.
-                     console.log("Automated tasks run only after 23:59:59 ")
-                  }
-                  else if (diffInHours >= 0 && diffInHours <= 72) {
+                 if (diffInHours >= 24 && diffInHours <= 72) {
                      //console.log("24 - 48","check if acknowledged")
                      console.log(issue.number, await isAcknowledged(issue, context));
-                     if (!isAcknowledged(issue, context)) {
-                        //console.log("Issue is not acknowledged",issue.number);
-                        addLabel(context, issue.number, ['sla-v-1']);
-                        postMessage(`please assign someone from ${getTeam(context.payload.repository.name)} to the issue #${issue.number}.`);
+                     if (! await isAcknowledged(issue, context)) {
+                        console.log("Issue is not acknowledged",issue.number);
+                        await addLabel(context, issue.number, ['sla-v-1']);
+                        await postMessage(`please assign someone from ${getTeam(context.payload.repository.name)} to the issue #${issue.number}.`);
                      }
                   }
                   else if (diffInDays > 3) {
@@ -71,10 +67,11 @@ let routineTask = async (context) => {
 
                   //   console.log("Service req");
                   let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
-                  
+
                   if (diffInDays > 0 && diffInDays < 2) {
                      // it been a day
                      if (!isAcknowledged(issue, context)) {
+                        
                         addLabel(context, issue.number, ['sla-v-1']);
                      }
 

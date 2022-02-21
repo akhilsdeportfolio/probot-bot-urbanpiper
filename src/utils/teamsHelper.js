@@ -2,6 +2,7 @@ const teams = {
           "issues-prime": ['aznn', 'vrajroham','parth-koshta', 'ibrahimkundlik','akhilsdeportfolio'],
           "issues-codex": ['anirvan-majumdar','suvodhoy','ray-abhishek','tohidur','nikhil-31','infiniti-code','abhi-1408','manoharup03'],
           "ola-clone": ['akhilsdeportfolio'],
+          "ola_clone": ['akhilsdeportfolio'],
           "test-team-1": ['akhilsdeportfolio']          
 }
 
@@ -10,7 +11,8 @@ const teams = {
 const repoMap = {
        "issues-codex":"codex",
        "issues-prime":"stl-prime",       
-       "bot-testing":"test-team-1"
+       "bot-testing":"test-team-1",
+       "ola_clone":"ola_clone"
 }
 
 

@@ -7,10 +7,11 @@ const {postMessage} = require('../utils/slackHelper');
 
 let onIssueOpened = async (context) => {
           //this is triggered when ever issue is created;
+
           let repo = context.payload.repository.name;
           let team = getTeam(repo);
           // find the corresponding team based on repo using teamsHelper 
-          //console.log("Repo \t:",repo,"Team \t:",team);
+          console.log("Repo \t:",repo,"Team \t:",team);
 
           
           postMessage(`New issue #${context.payload.issue.number} from the [${context.payload.repository.name}] repo has been created, please assign some from ${team}`);
