@@ -29,7 +29,7 @@ async function isAcknowledged(issue, context) {
         });
 
 
-//        console.log("before checking",isValid);
+        //        console.log("before checking",isValid);
 
         //console.log(reactions);
         //check if it is a valid reaction from the team member
@@ -42,7 +42,7 @@ async function isAcknowledged(issue, context) {
                                 isValid = true;
 
                 });
-                
+
 
         }
 

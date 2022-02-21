@@ -22,8 +22,7 @@ async function welcomeComment(context, message) {
 }
 
 
-async function closedComment(context)
-{
+async function closedComment(context) {
           const issueComment = context.issue({
                     body: "Issue has been closed."
           });
@@ -45,4 +44,4 @@ async function addResolutionDateComment(context) {
           await metadata(context).set({ "resolutionDate": getFutureDateUF(moment.utc(context.payload.issue.created_at), 3) });
 
 }
-module.exports = { createComment, welcomeComment, addResolutionDateComment,closedComment };         
+module.exports = { createComment, welcomeComment, addResolutionDateComment, closedComment };         
