@@ -5,6 +5,7 @@ const onIssueOpened = require("./src/tasks/onIssueOpened");
 const onIssueClosed = require("./src/tasks/onIssueClosed");
 const { isMemeber } = require("./src/utils/teamsHelper");
 const { getFutureDate, isTimeOut } = require("./src/utils/momentHelper");
+const onIssueComment = require("./src/tasks/onIssueComment");
 
 module.exports = (app) => {
   const octokit = new ProbotOctokit({
@@ -23,6 +24,7 @@ module.exports = (app) => {
   app.on('schedule.repository', routineTask);
   app.on("issues.opened", onIssueOpened);
   app.on("issues.closed", onIssueClosed);
+  app.on("issue_comment",onIssueComment)
 };
 
 

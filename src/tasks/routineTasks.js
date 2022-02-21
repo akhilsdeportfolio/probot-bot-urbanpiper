@@ -42,7 +42,7 @@ let routineTask = async (context) => {
                      if (! await isAcknowledged(issue, context)) {
                         console.log("Issue is not acknowledged", issue.number);
                         await addLabel(context, issue.number, ['sla-v-1']);
-                        await postMessage(`please assign someone from ${getTeam(context.payload.repository.name)} to the issue #${issue.number}.`);
+                        await postMessage(`please assign someone from ${getTeam(context.payload.repository.name)} to the issue #${issue.number}. \n  ${issue.html_url}`);
                      }
                   }
                   else if (diffInDays > 3) {
@@ -57,7 +57,7 @@ let routineTask = async (context) => {
                      else {
                         //doesnt have resolution date add
                         addLabel(context, issue.number, ['sla-v-2']);
-                        postMessage(`please add a resolution date to the issue # ${issue.number} of repo [${context.payload.repository.name}]`);
+                        postMessage(`please add a resolution date to the issue # ${issue.number} of repo [${context.payload.repository.name}]. \n  ${issue.html_url}`);
                      }
 
                      /*   */
@@ -88,7 +88,7 @@ let routineTask = async (context) => {
                //this is an unlablled issue act accordingly by alerting on slack.
                //post a slack message by tagging the respective team;
                //console.log(context);
-               await postMessage(`Please add label to issue #${issue.number} of Repo:[${context.payload.repository.name}].`);
+               await postMessage(`Please add label to issue #${issue.number} of Repo:[${context.payload.repository.name}]. \n  ${issue.html_url}`);
 
             }
          });
@@ -111,7 +111,7 @@ async function resolutionDateAction(comm, context, issue) {
 
       if (!isResolved(issue)) {
          await addLabel(context, issue.number, ['sla-v-3']);
-         await postMessage(`Please fix #${issue.number} of Repo [${context.payload.repository.name}] on prioroty.`);
+         await postMessage(`Please fix #${issue.number} of Repo [${context.payload.repository.name}] on prioroty.\n ${issue.html_url}`);
       }
       //addLabel(context, issue.number, ['sla-v-3']);
    }
