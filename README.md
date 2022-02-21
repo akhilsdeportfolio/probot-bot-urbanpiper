@@ -39,15 +39,17 @@ Sit back and relax . You have successfully installed the app.
 ```
 
 ## Creating Slack Bot for easy slack nootifications
+```sh
 # 1. create a slack app at api.slack.com/apps
  create a app and select the channel you want to notifiy the messages to .
 # 2 . after that slack will provide a webhook to send messages to that channel
 
 # 3. Replace that web-hook url with the SLACK_HOOK variable in the env file.
-
+```
 
 
 ## ENV file variables
+```sh
 # below is the list of variables present in the .env file 
 WEBHOOK_PROXY_URL,
 APP_ID,
@@ -59,7 +61,7 @@ DISABLE_DELAY,
 TOKEN,
 GITHUB_USERNAME,
 SLACK_HOOK
-
+```
 
 
 
