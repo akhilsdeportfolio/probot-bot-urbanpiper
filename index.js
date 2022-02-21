@@ -17,7 +17,7 @@ module.exports = (app) => {
   createScheduler(app, {
     name: 'daily',
     delay: !!process.env.DISABLE_DELAY,
-    interval:3*60*1000 //set to an interval of 1 min for testing purpose
+    interval:60*1000 //set to an interval of 1 min for testing purpose
   });
 
   //octokit.issues.listForRepo({})
