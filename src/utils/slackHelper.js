@@ -1,7 +1,11 @@
 const axios = require('axios');
+require('dotenv').config();
+
+
 
 async function postMessage(message) {
-          await axios.post("https://hooks.slack.com/services/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", {
+          //console.log(process.env);
+          await axios.post(process.env.SLACK_HOOK, {
                     text: message
           });
 }

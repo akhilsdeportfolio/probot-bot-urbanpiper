@@ -32,8 +32,8 @@ function getTeam(repoName)
 function isMemeber(team, memeberId) {
 
           if (teams[team] !== undefined) {
-                    const members = teams[team];
-                    console.log(members);
+                    const members = teams[team] || [];
+                   // console.log(members);
                     return members.includes(memeberId) === true ? true : false;
           }
           else {
