@@ -1,7 +1,7 @@
 const { postMessage } = require('../utils/slackHelper');
 
 let onIssueComment = async (context) => {
-          //console.log(context.payload);
+          console.log(context.payload);
           let action = context.payload.action;
           let comment = context.payload.comment;
           let user = context.payload.comment.user;
