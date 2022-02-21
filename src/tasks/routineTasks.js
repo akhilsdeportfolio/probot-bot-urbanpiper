@@ -7,6 +7,7 @@ const { isBug, isSupport, isServiceRequest, isNoLabels, isResolved, isAcknowledg
 require('dotenv').config();
 const moment = require('moment');
 const { postMessage } = require('../utils/slackHelper');
+const { getTeam } = require('../utils/teamsHelper');
 
 let routineTask = async (context) => {
    //this is a routine task that will be triggered according to the configured scheduler
@@ -45,6 +46,7 @@ let routineTask = async (context) => {
                      if (!isAcknowledged(issue, context)) {
                         //console.log("Issue is not acknowledged",issue.number);
                         addLabel(context, issue.number, ['sla-v-1']);
+                        postMessage(`please assign someone from ${getTeam(context.payload.repository.name)} to the issue #${issue.number}.`);
                      }
                   }
                   else if (diffInDays > 3) {
@@ -59,7 +61,7 @@ let routineTask = async (context) => {
                      else {
                         //doesnt have resolution date add
                         addLabel(context, issue.number, ['sla-v-2']);
-
+                        postMessage(`please add a resolution date to the issue # ${issue.number} of repo [${context.payload.repository.name}]`);
                      }
 
                      /*   */
@@ -69,8 +71,8 @@ let routineTask = async (context) => {
 
                   //   console.log("Service req");
                   let diffInDays = dateDiffInDays(new Date(issue.created_at), new Date());
-
-                  if (diffInDays >= 0 && diffInDays < 2) {
+                  
+                  if (diffInDays > 0 && diffInDays < 2) {
                      // it been a day
                      if (!isAcknowledged(issue, context)) {
                         addLabel(context, issue.number, ['sla-v-1']);
@@ -104,15 +106,15 @@ let routineTask = async (context) => {
 async function resolutionDateAction(comm, context, issue) {
    const resolutionDate = comm.date.split("-")[1].trim();
    let temp = resolutionDate.split("/");
-   console.log("Resolution Date", comm.date.split("-")[1].trim());;
-   console.log("Diff in hours res", dateDiffInHours(new Date(+temp[2], +temp[1] - 1, +temp[0])));
+   //console.log("Resolution Date", comm.date.split("-")[1].trim());;
+   //console.log("Diff in hours res", dateDiffInHours(new Date(+temp[2], +temp[1] - 1, +temp[0])));
    //find the diff between dates and if > 0 add sla-v-3
    let diff = dateDiffInHours(new Date(+temp[2], +temp[1] - 1, +temp[0]))
    if (diff < 0) {
 
       if (!isResolved(issue)) {
          await addLabel(context, issue.number, ['sla-v-3']);
-         await postMessage(`Please fix #${issue.number} on prioroty @issues-prime`);
+         await postMessage(`Please fix #${issue.number} of Repo [${context.payload.repository.name}] on prioroty.`);
       }
       //addLabel(context, issue.number, ['sla-v-3']);
    }
